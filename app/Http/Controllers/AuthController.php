@@ -16,16 +16,16 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ],
             [
-                'name.required' => 'El campo nombre es requerido.',
-                'email.required' => 'El campo correo electrónico es requerido.',
-                'email.email' => 'El correo electrónico debe ser una dirección de correo válida.',
-                'email.unique' => 'Ya existe un usuario con este correo electrónico.',
-                'password.required' => 'El campo contraseña es requerido.',
-                'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
+                'name.required' => 'Es requerido el campo nombre  .',
+                'email.required' => 'Es requerido el campo correo electrónico.',
+                'email.email' => 'El correo electrónico tiene que ser una dirección de correo válida.',
+                'email.unique' => 'Ya hay un usuario con el mismo correo electrónico.',
+                'password.required' => 'Es requerido el campo contraseña.',
+                'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'No se pudo registrar, verifique los datos', 'errors' => $validator->errors()], 400);
+            return response()->json(['message' => 'No se pudo registrar el ususario, verifiquepor favor los datos', 'errors' => $validator->errors()], 400);
         }
 
         $user = new \App\Models\User();
@@ -34,7 +34,7 @@ class AuthController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
 
-        return response()->json(['message' => 'Usuario Registrado con exito'], 201);
+        return response()->json(['message' => 'Registrado de Usuario con exito'], 201);
     }
 
     public function login(Request $request)
@@ -44,9 +44,9 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
             $token = $user->createToken('authToken')->plainTextToken;
-            return response()->json(['message' => 'Login Exitoso, Bienvenido', 'token' => $token], 200);
+            return response()->json(['message' => 'Login Aprobado, accedimos!', 'token' => $token], 200);
         } else {
-            return response()->json(['message' => 'Error, Verificar contraseña/correo'], 401);
-        }
-    }
+            return response()->json(['message' => 'Error en registro, Verificar los campos por favor contraseña/correo'], 401);
+        }
+    }
 }
